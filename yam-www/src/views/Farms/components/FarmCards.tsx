@@ -12,12 +12,12 @@ import Loader from '../../../components/Loader'
 import Spacer from '../../../components/Spacer'
 
 import useFarms from '../../../hooks/useFarms'
-import useYam from '../../../hooks/useYam'
+import useYam from '../../../hooks/useSake'
 
 import { Farm } from '../../../contexts/Farms'
 
 import { bnToDec } from '../../../utils'
-import { getEarned, getPoolStartTime } from '../../../yamUtils'
+import { getEarned, getPoolStartTime } from '../../../sakeUtils'
 
 const FarmCards: React.FC = () => {
   const [farms] = useFarms()

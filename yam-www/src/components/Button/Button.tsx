@@ -33,7 +33,7 @@ const Button: React.FC<ButtonProps> = ({
       break
     case 'default':
     default:
-      buttonColor = color.primary.main
+      buttonColor = color.white
   }
 
   let boxShadow: string
@@ -42,25 +42,19 @@ const Button: React.FC<ButtonProps> = ({
   let fontSize: number
   switch (size) {
     case 'sm':
-      boxShadow = `4px 4px 8px ${color.grey[300]},
-        -8px -8px 16px ${color.grey[100]}FF;`
       buttonPadding = spacing[3]
-      buttonSize = 36
+      buttonSize = 34
       fontSize = 14
       break
     case 'lg':
-      boxShadow = `6px 6px 12px ${color.grey[300]},
-        -12px -12px 24px ${color.grey[100]}ff;`
       buttonPadding = spacing[4]
-      buttonSize = 72
+      buttonSize = 56
       fontSize = 16
       break
     case 'md':
     default:
-      boxShadow = `6px 6px 12px ${color.grey[300]},
-        -12px -12px 24px -2px ${color.grey[100]}ff;`
       buttonPadding = spacing[4]
-      buttonSize = 56
+      buttonSize = 40
       fontSize = 16
   }
 
@@ -101,15 +95,14 @@ interface StyledButtonProps {
 
 const StyledButton = styled.button<StyledButtonProps>`
   align-items: center;
-  background-color: ${props => props.theme.color.grey[200]};
+  background-color: ${props => props.theme.color.primary.accent};
   border: 0;
-  border-radius: 12px;
-  box-shadow: ${props => props.boxShadow};
+  border-radius: 20px;
   color: ${props => !props.disabled ? props.color : `${props.color}55`};
   cursor: pointer;
   display: flex;
   font-size: ${props => props.fontSize}px;
-  font-weight: 700;
+  font-weight: 600;
   height: ${props => props.size}px;
   justify-content: center;
   outline: none;
@@ -118,7 +111,8 @@ const StyledButton = styled.button<StyledButtonProps>`
   pointer-events: ${props => !props.disabled ? undefined : 'none'};
   width: 100%;
   &:hover {
-    background-color: ${props => props.theme.color.grey[100]};
+    background-color: ${props => props.theme.color.white};
+    color: ${props => props.theme.color.magenta}
   }
 `
 

@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 
 import { bnToDec, decToBn } from '../utils'
-import { getScalingFactor } from '../yamUtils'
+import { getScalingFactor } from '../sakeUtils'
 
-import useYam from './useYam'
+import useSake from './useSake'
 
 const useScalingFactor = () => {
   const [scalingFactor, setScalingFactor] = useState(decToBn(1))
-  const yam = useYam()
+  const yam = useSake()
 
   useEffect(() => {
     async function fetchScalingFactor () {

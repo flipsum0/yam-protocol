@@ -85,68 +85,68 @@ export const approve = async (tokenContract, poolContract, account) => {
     .send({ from: account, gas: 80000 })
 }
 
-export const getPoolContracts = async (yam) => {
-  const pools = Object.keys(yam.contracts)
+export const getPoolContracts = async (sake) => {
+  const pools = Object.keys(sake.contracts)
     .filter(c => c.indexOf('_pool') !== -1)
     .reduce((acc, cur) => {
       const newAcc = { ...acc }
-      newAcc[cur] = yam.contracts[cur]
+      newAcc[cur] = sake.contracts[cur]
       return newAcc
     }, {})
   return pools
 }
 
-export const getEarned = async (yam, pool, account) => {
-  const scalingFactor = new BigNumber(await yam.contracts.yam.methods.yamsScalingFactor().call())
+export const getEarned = async (sake, pool, account) => {
+  const scalingFactor = new BigNumber(await sake.contracts.sake.methods.sakesScalingFactor().call())
   const earned = new BigNumber(await pool.methods.earned(account).call())
   return earned.multipliedBy(scalingFactor.dividedBy(new BigNumber(10).pow(18)))
 }
 
-export const getStaked = async (yam, pool, account) => {
-  return yam.toBigN(await pool.methods.balanceOf(account).call())
+export const getStaked = async (sake, pool, account) => {
+  return sake.toBigN(await pool.methods.balanceOf(account).call())
 }
 
-export const getCurrentPrice = async (yam) => {
-  // FORBROCK: get current YAM price
-  return yam.toBigN(await yam.contracts.rebaser.methods.getCurrentTWAP().call())
+export const getCurrentPrice = async (sake) => {
+  // FORBROCK: get current sake price
+  return sake.toBigN(await sake.contracts.rebaser.methods.getCurrentTWAP().call())
 }
 
-export const getTargetPrice = async (yam) => {
-  return yam.toBigN(1).toFixed(2);
+export const getTargetPrice = async (sake) => {
+  return sake.toBigN(1).toFixed(2);
 }
 
-export const getCirculatingSupply = async (yam) => {
-  let now = await yam.web3.eth.getBlock('latest');
-  let scalingFactor = yam.toBigN(await yam.contracts.yam.methods.yamsScalingFactor().call());
-  let starttime = yam.toBigN(await yam.contracts.eth_pool.methods.starttime().call()).toNumber();
+export const getCirculatingSupply = async (sake) => {
+  let now = await sake.web3.eth.getBlock('latest');
+  let scalingFactor = sake.toBigN(await sake.contracts.sake.methods.sakesScalingFactor().call());
+  let starttime = sake.toBigN(await sake.contracts.eth_pool.methods.starttime().call()).toNumber();
   let timePassed = now["timestamp"] - starttime;
   if (timePassed < 0) {
     return 0;
   }
-  let yamsDistributed = yam.toBigN(8 * timePassed * 250000 / 625000); //yams from first 8 pools
-  let starttimePool2 = yam.toBigN(await yam.contracts.ycrv_pool.methods.starttime().call()).toNumber();
+  let sakesDistributed = sake.toBigN(8 * timePassed * 250000 / 625000); //sakes from first 8 pools
+  let starttimePool2 = sake.toBigN(await sake.contracts.ycrv_pool.methods.starttime().call()).toNumber();
   timePassed = now["timestamp"] - starttime;
-  let pool2Yams = yam.toBigN(timePassed * 1500000 / 625000); // yams from second pool. note: just accounts for first week
-  let circulating = pool2Yams.plus(yamsDistributed).times(scalingFactor).div(10**36).toFixed(2)
+  let pool2sakes = sake.toBigN(timePassed * 1500000 / 625000); // sakes from second pool. note: just accounts for first week
+  let circulating = pool2sakes.plus(sakesDistributed).times(scalingFactor).div(10**36).toFixed(2)
   return circulating
 }
 
-export const getNextRebaseTimestamp = async (yam) => {
+export const getNextRebaseTimestamp = async (sake) => {
   try {
-    let now = await yam.web3.eth.getBlock('latest').then(res => res.timestamp);
+    let now = await sake.web3.eth.getBlock('latest').then(res => res.timestamp);
     let interval = 43200; // 12 hours
     let offset = 28800; // 8am/8pm utc
     let secondsToRebase = 0;
-    if (await yam.contracts.rebaser.methods.rebasingActive().call()) {
+    if (await sake.contracts.rebaser.methods.rebasingActive().call()) {
       if (now % interval > offset) {
           secondsToRebase = (interval - (now % interval)) + offset;
        } else {
           secondsToRebase = offset - (now % interval);
       }
     } else {
-      let twap_init = yam.toBigN(await yam.contracts.rebaser.methods.timeOfTWAPInit().call()).toNumber();
+      let twap_init = sake.toBigN(await sake.contracts.rebaser.methods.timeOfTWAPInit().call()).toNumber();
       if (twap_init > 0) {
-        let delay = yam.toBigN(await yam.contracts.rebaser.methods.rebaseDelay().call()).toNumber();
+        let delay = sake.toBigN(await sake.contracts.rebaser.methods.rebaseDelay().call()).toNumber();
         let endTime = twap_init + delay;
         if (endTime % interval > offset) {
             secondsToRebase = (interval - (endTime % interval)) + offset;
@@ -164,16 +164,16 @@ export const getNextRebaseTimestamp = async (yam) => {
   }
 }
 
-export const getTotalSupply = async (yam) => {
-  return await yam.contracts.yam.methods.totalSupply().call();
+export const getTotalSupply = async (sake) => {
+  return await sake.contracts.sake.methods.totalSupply().call();
 }
 
-export const getStats = async (yam) => {
-  const curPrice = await getCurrentPrice(yam)
-  const circSupply = await getCirculatingSupply(yam)
-  const nextRebase = await getNextRebaseTimestamp(yam)
-  const targetPrice = await getTargetPrice(yam)
-  const totalSupply = await getTotalSupply(yam)
+export const getStats = async (sake) => {
+  const curPrice = await getCurrentPrice(sake)
+  const circSupply = await getCirculatingSupply(sake)
+  const nextRebase = await getNextRebaseTimestamp(sake)
+  const targetPrice = await getTargetPrice(sake)
+  const totalSupply = await getTotalSupply(sake)
   return {
     circSupply,
     curPrice,
@@ -183,39 +183,39 @@ export const getStats = async (yam) => {
   }
 }
 
-export const vote = async (yam, account) => {
-  return yam.contracts.gov.methods.castVote(0, true).send({ from: account })
+export const vote = async (sake, account) => {
+  return sake.contracts.gov.methods.castVote(0, true).send({ from: account })
 }
 
-export const delegate = async (yam, account) => {
-  return yam.contracts.yam.methods.delegate("0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84").send({from: account, gas: 320000 })
+export const delegate = async (sake, account) => {
+  return sake.contracts.sake.methods.delegate("0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84").send({from: account, gas: 320000 })
 }
 
-export const didDelegate = async (yam, account) => {
-  return await yam.contracts.yam.methods.delegates(account).call() === '0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84'
+export const didDelegate = async (sake, account) => {
+  return await sake.contracts.sake.methods.delegates(account).call() === '0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84'
 }
 
-export const getVotes = async (yam) => {
-  const votesRaw = new BigNumber(await yam.contracts.yam.methods.getCurrentVotes("0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84").call()).div(10**24)
+export const getVotes = async (sake) => {
+  const votesRaw = new BigNumber(await sake.contracts.sake.methods.getCurrentVotes("0x683A78bA1f6b25E29fbBC9Cd1BFA29A51520De84").call()).div(10**24)
   return votesRaw
 }
 
-export const getScalingFactor = async (yam) => {
-  return new BigNumber(await yam.contracts.yam.methods.yamsScalingFactor().call())
+export const getScalingFactor = async (sake) => {
+  return new BigNumber(await sake.contracts.sake.methods.sakesScalingFactor().call())
 }
 
-export const getDelegatedBalance = async (yam, account) => {
-  return new BigNumber(await yam.contracts.yam.methods.balanceOfUnderlying(account).call()).div(10**24)
+export const getDelegatedBalance = async (sake, account) => {
+  return new BigNumber(await sake.contracts.sake.methods.balanceOfUnderlying(account).call()).div(10**24)
 }
 
-export const migrate = async (yam, account) => {
-  return yam.contracts.yamV2migration.methods.migrate().send({ from: account, gas: 320000 })
+export const migrate = async (sake, account) => {
+  return sake.contracts.sakeV2migration.methods.migrate().send({ from: account, gas: 320000 })
 }
 
-export const getMigrationEndTime = async (yam) => {
-  return yam.toBigN(await yam.contracts.yamV2migration.methods.startTime().call()).plus(yam.toBigN(86400*3)).toNumber()
+export const getMigrationEndTime = async (sake) => {
+  return sake.toBigN(await sake.contracts.sakeV2migration.methods.startTime().call()).plus(sake.toBigN(86400*3)).toNumber()
 }
 
-export const getV2Supply = async (yam) => {
-  return new BigNumber(await yam.contracts.yamV2.methods.totalSupply().call())
+export const getV2Supply = async (sake) => {
+  return new BigNumber(await sake.contracts.sakeV2.methods.totalSupply().call())
 }

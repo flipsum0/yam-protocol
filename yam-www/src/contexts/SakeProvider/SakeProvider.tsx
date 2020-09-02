@@ -2,29 +2,29 @@ import React, { createContext, useEffect, useState } from 'react'
 
 import { useWallet } from 'use-wallet'
 
-import { Yam } from '../../yam'
+import { Sake } from '../../sake'
 
-export interface YamContext {
-  yam?: typeof Yam
+export interface SakeContext {
+  sake?: typeof Sake
 }
 
-export const Context = createContext<YamContext>({
-  yam: undefined,
+export const Context = createContext<SakeContext>({
+  sake: undefined,
 })
 
 declare global {
   interface Window {
-    yamsauce: any
+    sakesauce: any
   }
 }
 
-const YamProvider: React.FC = ({ children }) => {
+const SakeProvider: React.FC = ({ children }) => {
   const { ethereum } = useWallet()
-  const [yam, setYam] = useState<any>()
+  const [sake, setSake] = useState<any>()
 
   useEffect(() => {
     if (ethereum) {
-      const yamLib = new Yam(
+      const sakeLib = new Sake(
         ethereum,
         "1",
         false, {
@@ -38,16 +38,16 @@ const YamProvider: React.FC = ({ children }) => {
           ethereumNodeTimeout: 10000
         }
       )
-      setYam(yamLib)
-      window.yamsauce = yamLib
+      setSake(sakeLib)
+      window.sakesauce = sakeLib
     }
   }, [ethereum])
 
   return (
-    <Context.Provider value={{ yam }}>
+    <Context.Provider value={{ sake }}>
       {children}
     </Context.Provider>
   )
 }
 
-export default YamProvider
+export default SakeProvider

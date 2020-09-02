@@ -11,7 +11,7 @@ import CardContent from '../../../components/CardContent'
 import Label from '../../../components/Label'
 import Spacer from '../../../components/Spacer'
 
-import useYam from '../../../hooks/useYam'
+import useSake from '../../../hooks/useSake'
 import useScalingFactor from '../../../hooks/useScalingFactor'
 
 import {
@@ -19,7 +19,7 @@ import {
   didDelegate,
   getDelegatedBalance,
   getVotes,
-} from '../../../yamUtils'
+} from '../../../sakeUtils'
 
 interface VoteProps {
 }
@@ -34,7 +34,7 @@ const Vote: React.FC<VoteProps> = () => {
 
   const { account } = useWallet()
   const scalingFactor = useScalingFactor()
-  const yam = useYam()
+  const sake = useSake()
 
   const renderer = (countdownProps: CountdownRenderProps) => {
     const { hours, minutes, seconds } = countdownProps
@@ -57,36 +57,36 @@ const Vote: React.FC<VoteProps> = () => {
   }
 
   const handleVoteClick = useCallback(() => {
-    delegate(yam, account)
-  }, [account, yam])
+    delegate(sake, account)
+  }, [account, sake])
 
   const fetchVotes = useCallback(async () => {
-    const voteCount = await getVotes(yam)
+    const voteCount = await getVotes(sake)
     setTotalVotes(voteCount)
-  }, [yam, setTotalVotes])
+  }, [sake, setTotalVotes])
 
   useEffect(() => {
-    if (yam) {
+    if (sake) {
       fetchVotes()
     }
     const refetch = setInterval(fetchVotes, 10000)
     return () => clearInterval(refetch)
-  }, [fetchVotes, yam])
+  }, [fetchVotes, sake])
 
   const fetchDidDelegate = useCallback(async () => {
-    const d = await didDelegate(yam, account)
+    const d = await didDelegate(sake, account)
     if (d) {
-      const amount = await getDelegatedBalance(yam, account)
+      const amount = await getDelegatedBalance(sake, account)
       setDelegatedBalance(amount)
     }
     setDelegated(d)
-  }, [setDelegated, yam, account, setDelegatedBalance])
+  }, [setDelegated, sake, account, setDelegatedBalance])
 
   useEffect(() => {
-    if (yam && account) {
+    if (sake && account) {
       fetchDidDelegate()
     }
-  }, [fetchDidDelegate, yam, account])
+  }, [fetchDidDelegate, sake, account])
 
   return (
     <Card>
@@ -124,7 +124,7 @@ const Vote: React.FC<VoteProps> = () => {
                   fontSize: 12,
                   marginTop: 4,
                   marginLeft: 4,
-                }}>{`/ ${Number(new BigNumber(160000).multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} YAM`}</div>
+                }}>{`/ ${Number(new BigNumber(160000).multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} sake`}</div>
             </div>
           </StyledCenter>
         </StyledResponsiveWrapper>
@@ -150,10 +150,10 @@ const Vote: React.FC<VoteProps> = () => {
         </StyledCheckpoints>
         <Spacer />
         {!delegated ? (
-          <Button text="Delegate to save YAM" onClick={handleVoteClick} />
+          <Button text="Delegate to save sake" onClick={handleVoteClick} />
         ) : (
           <div>
-            <StyledDelegatedCount>Delegating: {Number(delegatedBalance.multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} YAM</StyledDelegatedCount>
+            <StyledDelegatedCount>Delegating: {Number(delegatedBalance.multipliedBy(scalingFactor).toFixed(0)).toLocaleString()} sake</StyledDelegatedCount>
             <StyledThankYou>Thank you for your support ❤️</StyledThankYou>
             <div style={{
               alignItems: 'baseline',
@@ -173,8 +173,8 @@ const Vote: React.FC<VoteProps> = () => {
           paddingTop: 24,
           opacity: 0.6,
         }}>
-          <p>NOTE: You must harvest your YAMs BEFORE 7am UTC Thursday 8/13 - very soon.</p>
-          <p>Hold them in your wallet until 10PM UTC Sunday 8/16 for your delegation to save YAM</p>
+          <p>NOTE: You must harvest your sakes BEFORE 7am UTC Thursday 8/13 - very soon.</p>
+          <p>Hold them in your wallet until 10PM UTC Sunday 8/16 for your delegation to save sake</p>
         </div>
           <div style={{
             display: 'flex',
@@ -182,7 +182,7 @@ const Vote: React.FC<VoteProps> = () => {
             justifyContent: 'center',
             marginTop: 32,
           }}>
-          <StyledLink target="__blank" href="https://twitter.com/YamFinance/status/1293660938906869760">More Info</StyledLink>
+          <StyledLink target="__blank" href="https://twitter.com/sakeFinance/status/1293660938906869760">More Info</StyledLink>
         </div>
       </CardContent>
     </Card>

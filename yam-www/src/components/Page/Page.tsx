@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import Footer from '../Footer'
 import TopBar from '../TopBar'
+import waves from '../../assets/img/waves.svg'
 
 const Page: React.FC = ({ children }) => (
   <StyledPage>
@@ -13,7 +14,10 @@ const Page: React.FC = ({ children }) => (
   </StyledPage>
 )
 
-const StyledPage = styled.div``
+const StyledPage = styled.div`
+  background: url(${waves}) center bottom repeat-x;
+  background-size: 1920px;
+`
 
 const StyledMain = styled.div`
   align-items: center;

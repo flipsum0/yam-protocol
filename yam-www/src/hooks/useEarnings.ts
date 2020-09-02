@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js'
 import { useWallet } from 'use-wallet'
 import { Contract } from "web3-eth-contract"
 
-import { getEarned } from '../yamUtils'
-import useYam from './useYam'
+import { getEarned } from '../sakeUtils'
+import useYam from './useSake'
 
 const useEarnings = (pool: Contract) => {
   const [balance, setBalance] = useState(new BigNumber(0))

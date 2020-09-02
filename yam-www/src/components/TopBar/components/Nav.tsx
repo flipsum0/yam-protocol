@@ -6,7 +6,8 @@ const Nav: React.FC = () => {
   return (
     <StyledNav>
       <StyledLink exact activeClassName="active" to="/">Home</StyledLink>
-      <StyledLink exact activeClassName="active" to="/farms">Farms</StyledLink>
+      <StyledLink exact activeClassName="active" to="/swaps">Swaps</StyledLink>
+      <StyledLink exact activeClassName="active" to="/about">About</StyledLink>
     </StyledNav>
   )
 }
@@ -17,16 +18,16 @@ const StyledNav = styled.nav`
 `
 
 const StyledLink = styled(NavLink)`
-  color: ${props => props.theme.color.grey[400]};
-  font-weight: 700;
+  color: ${props => props.theme.color.white};
+  font-weight: 600;
   padding-left: ${props => props.theme.spacing[3]}px;
   padding-right: ${props => props.theme.spacing[3]}px;
   text-decoration: none;
   &:hover {
-    color: ${props => props.theme.color.grey[500]};
+    color: ${props => props.theme.color.cyan};
   }
   &.active {
-    color: ${props => props.theme.color.primary.main};
+    color: ${props => props.theme.color.cyan};
   }
 `
 

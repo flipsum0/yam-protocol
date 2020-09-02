@@ -1,4 +1,4 @@
-import { Yam } from '../../yam'
+import { Sake } from '../../sake'
 
 import { bnToDec } from '../../utils'
 
@@ -9,42 +9,42 @@ import {
   getNextRebaseTimestamp as gNRT,
   getTotalSupply as gTS,
   getScalingFactor,
-} from '../../yamUtils'
+} from '../../sakeUtils'
 
-const getCurrentPrice = async (yam: typeof Yam): Promise<number> => {
+const getCurrentPrice = async (sake: typeof Sake): Promise<number> => {
   // FORBROCK: get current YAM price
-  return gCP(yam)
+  return gCP(sake)
 }
 
-const getTargetPrice = async (yam: typeof Yam): Promise<number> => {
+const getTargetPrice = async (sake: typeof Sake): Promise<number> => {
   // FORBROCK: get target YAM price
-  return gTP(yam)
+  return gTP(sake)
 }
 
-const getCirculatingSupply = async (yam: typeof Yam): Promise<string> => {
+const getCirculatingSupply = async (sake: typeof Sake): Promise<string> => {
   // FORBROCK: get circulating supply
-  return gCS(yam)
+  return gCS(sake)
 }
 
-const getNextRebaseTimestamp = async (yam: typeof Yam): Promise<number> => {
+const getNextRebaseTimestamp = async (sake: typeof Sake): Promise<number> => {
   // FORBROCK: get next rebase timestamp
-  const nextRebase = await gNRT(yam) as number
+  const nextRebase = await gNRT(sake) as number
   return nextRebase * 1000
 }
 
-const getTotalSupply = async (yam: typeof Yam): Promise<string> => {
+const getTotalSupply = async (sake: typeof Sake): Promise<string> => {
   // FORBROCK: get total supply
-  return gTS(yam)
+  return gTS(sake)
 }
 
-export const getStats = async (yam: typeof Yam) => {
-  const curPrice = await getCurrentPrice(yam)
-  const circSupply = '' // await getCirculatingSupply(yam)
-  const nextRebase = await getNextRebaseTimestamp(yam)
-  const rawScalingFactor = await getScalingFactor(yam)
+export const getStats = async (sake: typeof Sake) => {
+  const curPrice = await getCurrentPrice(sake)
+  const circSupply = '' // await getCirculatingSupply(sake)
+  const nextRebase = await getNextRebaseTimestamp(sake)
+  const rawScalingFactor = await getScalingFactor(sake)
   const scalingFactor = Number(bnToDec(rawScalingFactor).toFixed(2))
-  const targetPrice = await getTargetPrice(yam)
-  const totalSupply = await getTotalSupply(yam)
+  const targetPrice = await getTargetPrice(sake)
+  const totalSupply = await getTotalSupply(sake)
   return {
     circSupply,
     curPrice,

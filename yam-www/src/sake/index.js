@@ -6,7 +6,7 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 });
 
-export { Yam } from './Yam.js';
+export { Sake } from './Sake.js';
 export {
   Web3,
   BigNumber,

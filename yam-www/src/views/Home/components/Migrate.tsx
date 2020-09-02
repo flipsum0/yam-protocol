@@ -14,17 +14,17 @@ import Separator from '../../../components/Separator'
 import Spacer from '../../../components/Spacer'
 import Value from '../../../components/Value'
 
-import { yam as yamAddress } from '../../../constants/tokenAddresses'
+import { sake as sakeAddress } from '../../../constants/tokenAddresses'
 
 import useAllowance from '../../../hooks/useAllowance'
 import useApprove from '../../../hooks/useApprove'
 import useScalingFactor from '../../../hooks/useScalingFactor'
 import useTokenBalance from '../../../hooks/useTokenBalance'
-import useYam from '../../../hooks/useYam'
+import useSake from '../../../hooks/useSake'
 
 import { bnToDec } from '../../../utils'
 import { getContract } from '../../../utils/erc20'
-import { getMigrationEndTime, migrate } from '../../../yamUtils'
+import { getMigrationEndTime, migrate } from '../../../sakeUtils'
 
 const Migrate: React.FC = () => {
 
@@ -34,18 +34,18 @@ const Migrate: React.FC = () => {
 
   const { account, ethereum } = useWallet()
   const scalingFactor = useScalingFactor()
-  const yam = useYam()
+  const sake = useSake()
 
-  const yamV1Balance = bnToDec(useTokenBalance(yamAddress))
-  const yamV2ReceiveAmount = yamV1Balance / scalingFactor
+  const sakeV1Balance = bnToDec(useTokenBalance(sakeAddress))
+  const sakeV2ReceiveAmount = sakeV1Balance / scalingFactor
 
-  const yamV1Token = useMemo(() => {
-    return getContract(ethereum as provider, yamAddress)
+  const sakeV1Token = useMemo(() => {
+    return getContract(ethereum as provider, sakeAddress)
   }, [ethereum])
 
-  const migrationContract = yam ? (yam as any).contracts.yamV2migration : undefined
-  const allowance = useAllowance(yamV1Token, migrationContract)
-  const { onApprove } = useApprove(yamV1Token, migrationContract)
+  const migrationContract = sake ? (sake as any).contracts.sakeV2migration : undefined
+  const allowance = useAllowance(sakeV1Token, migrationContract)
+  const { onApprove } = useApprove(sakeV1Token, migrationContract)
   
   const countdownRenderer = useCallback((countdownProps: CountdownRenderProps) => {
     const { days, hours, minutes, seconds } = countdownProps
@@ -61,33 +61,33 @@ const Migrate: React.FC = () => {
   const handleMigrate = useCallback(async () => {
     try {
       setMigrateButtonDisabled(true)
-      await migrate(yam, account)
+      await migrate(sake, account)
       setMigrateButtonDisabled(false)
     } catch (e) {
       setMigrateButtonDisabled(false)
     }
-  }, [account, yam, setMigrateButtonDisabled])
+  }, [account, sake, setMigrateButtonDisabled])
 
   useEffect(() => {
     async function fetchMigrationEndDate () {
       try {
-        const endTimestamp: number = await getMigrationEndTime(yam)
+        const endTimestamp: number = await getMigrationEndTime(sake)
         setMigrationEndDate(new Date(endTimestamp * 1000))
       } catch (e) { console.log(e) }
     }
-    if (yam) {
+    if (sake) {
       fetchMigrationEndDate()
     }
-  }, [yam, setMigrationEndDate])
+  }, [sake, setMigrationEndDate])
 
   useEffect(() => {
-    if (!account || !yamV1Balance) {
+    if (!account || !sakeV1Balance) {
       setMigrateButtonDisabled(true)
     }
-    if (account && yamV1Balance) {
+    if (account && sakeV1Balance) {
       setMigrateButtonDisabled(false)
     }
-  }, [account, setMigrateButtonDisabled, yamV1Balance])
+  }, [account, setMigrateButtonDisabled, sakeV1Balance])
 
   const handleApprove = useCallback(async () => {
     setApprovalDisabled(true)
@@ -117,15 +117,15 @@ const Migrate: React.FC = () => {
           <Spacer size="lg" />
           <StyledBalances>
             <StyledBalance>
-              <Value value={yamV1Balance ? numeral(yamV1Balance).format('0.00a') : '--'} />
-              <Label text="Burn YAMV1" />
+              <Value value={sakeV1Balance ? numeral(sakeV1Balance).format('0.00a') : '--'} />
+              <Label text="Burn sakeV1" />
             </StyledBalance>
             <div style={{ alignSelf: 'stretch' }}>
             <Separator orientation="vertical" />
             </div>
             <StyledBalance>
-              <Value value={yamV2ReceiveAmount ? numeral(yamV2ReceiveAmount).format('0.00a') : '--'} />
-              <Label text="Mint YAMV2" />
+              <Value value={sakeV2ReceiveAmount ? numeral(sakeV2ReceiveAmount).format('0.00a') : '--'} />
+              <Label text="Mint sakeV2" />
             </StyledBalance>
           </StyledBalances>
           <Spacer size="lg" />
@@ -143,7 +143,7 @@ const Migrate: React.FC = () => {
             />
           )}
           <Spacer />
-          <StyledWarning>WARNING: Burning your YAMV1 tokens for YAMV2 tokens is a permanent action.</StyledWarning>
+          <StyledWarning>WARNING: Burning your sakeV1 tokens for sakeV2 tokens is a permanent action.</StyledWarning>
         </CardContent>
       </Card>
     </StyledMigrateWrapper>

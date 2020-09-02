@@ -13,7 +13,7 @@ import TopBar from './components/TopBar'
 
 import FarmsProvider from './contexts/Farms'
 import ModalsProvider from './contexts/Modals'
-import YamProvider from './contexts/YamProvider'
+import YamProvider from './contexts/SakeProvider'
 import TransactionProvider from './contexts/Transactions'
 
 import useModal from './hooks/useModal'

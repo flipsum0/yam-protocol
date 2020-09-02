@@ -1,5 +1,7 @@
 export const white = '#FFF'
 export const black = '#000'
+export const cyan = '#50DEED'
+export const magenta = '#D72449'
 
 export const green = {
   500: '#00D110',

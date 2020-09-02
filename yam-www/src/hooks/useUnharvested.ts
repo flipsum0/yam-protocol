@@ -4,10 +4,10 @@ import { useWallet } from 'use-wallet'
 
 import { Context as FarmsContext } from '../contexts/Farms'
 import { bnToDec } from '../utils'
-import { getEarned } from '../yamUtils'
+import { getEarned } from '../sakeUtils'
 
 import useFarms from './useFarms'
-import useYam from './useYam'
+import useYam from './useSake'
 
 const useUnharvested = () => {
   const { unharvested } = useContext(FarmsContext)

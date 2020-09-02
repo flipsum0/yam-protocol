@@ -13,13 +13,13 @@ import Separator from '../../../components/Separator'
 import Spacer from '../../../components/Spacer'
 import WalletProviderModal from '../../../components/WalletProviderModal'
 
-import { yam as yamV1Address } from '../../../constants/tokenAddresses'
+import { sake as sakeV1Address } from '../../../constants/tokenAddresses'
 
 import useAllowance from '../../../hooks/useAllowance'
 import useApprove from '../../../hooks/useApprove'
 import useModal from '../../../hooks/useModal'
 import useUnharvested from '../../../hooks/useUnharvested'
-import useYam from '../../../hooks/useYam'
+import useSake from '../../../hooks/useSake'
 
 import { getContract } from '../../../utils/erc20'
 
@@ -32,12 +32,12 @@ const MigrationInstructionsModal: React.FC<ModalProps> = ({ onDismiss }) => {
   const { account, ethereum } = useWallet()
   const hasHarvested = !!account && !harvested
 
-  const yam = useYam()
-  const yamTokenContract = useMemo(() => getContract(ethereum as provider, yamV1Address), [])
-  const migrationContract = yam ? (yam as any).contracts.yamV2migration : undefined
+  const sake = useSake()
+  const sakeTokenContract = useMemo(() => getContract(ethereum as provider, sakeV1Address), [])
+  const migrationContract = sake ? (sake as any).contracts.sakeV2migration : undefined
 
-  const allowance = useAllowance(yamTokenContract, migrationContract)
-  const { onApprove } = useApprove(yamTokenContract, migrationContract)
+  const allowance = useAllowance(sakeTokenContract, migrationContract)
+  const { onApprove } = useApprove(sakeTokenContract, migrationContract)
   const hasApproved = !!allowance.toNumber()
 
   const handleApprove = useCallback(async () => {
